@@ -1,0 +1,27 @@
+{
+  "name": "Spot-Notify",
+  "version": "1.0.0",
+  "description": "Display MacOSX notfications for spotify music",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pm2877/Spot-Notify.git"
+  },
+  "keywords": [
+    "Notifications",
+    "mac",
+    "MacOS",
+    "Spotify",
+    "Music",
+    "NodeJS"
+  ],
+  "author": "swankyCoder",
+  "license": "MIT",
+  "dependencies": {
+    "node-notifier": "^5.0.2",
+    "spotify-node-applescript": "^1.0.0"
+  }
+}
