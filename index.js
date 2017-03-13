@@ -14,10 +14,9 @@ function getRunningStatus(getState){
     spotify.isRunning(function(err, isRunning){
         setRunningStatus(isRunning)
     });
-    if(isSpotifyRunning){
+    if(setRunningStatus){
         getState(detectStateChange) //pass a callback
     }
-    // TODO: rerun when spotify is started again
     // else{
     //     getRunningStatus(getState)
     // }   
@@ -25,6 +24,7 @@ function getRunningStatus(getState){
 
 function setRunningStatus(isRunning){
     isSpotifyRunning = isRunning
+    return isSpotifyRunning
 }
 
 function getState(detectStateChange){        //takes a callback
