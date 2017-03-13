@@ -1,38 +1,65 @@
 const notifier = require('node-notifier');
+const path = require('path');
 var spotify = require('spotify-node-applescript');
 var isSpotifyRunning
 var initialState
-var newState
+var isNotified = false
+var trackAlbum, trackAlbumArtist, trackName, artworkUrl
+var oldTrackName=''
 
+//Use this later
 spotify.isRunning(function(err, isRunning){
     isSpotifyRunning=isRunning
-    console.log(isSpotifyRunning)
 });
 
-spotify.getState(function(err, state){  
-    initialState = state.state
-    console.log(initialState)
-    detectStateChange(initialState)
-});
+getState(detectStateChange) //pass a callback
 
+function getState(detectStateChange){        //takes a callback
 
-function detectStateChange(currentState){
-    console.log(currentState)
-    while(isSpotifyRunning){
-        console.log(newState)
-        spotify.getState(function(err, state){  
-            newState = state.state
+    spotify.getState(function(err, state){  
+        //TODO: check if state is undefined, if yes, then recall
+        currentState = state.state
+        detectStateChange(currentState)     //detectStateChange is called here
+    });
 
-        });
-        if(currentState!=newState){
-            spotify.getTrack(function(err, track){
+}
+
+function getTrackDetails(){
+    spotify.getTrack(function(err, track){
+        //TODO: check if track is not undefined, if yes then recall
+        setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
+    });
+}
+
+function setTrackDetails(album, album_artist, name, artwork){
+    trackAlbum = album
+    trackAlbumArtist = album_artist
+    trackName = name
+    // artworkUrl = artwork
+}
+
+function detectStateChange(newState){
+        if(newState == 'playing'){
+            getTrackDetails()
+            if(!isNotified || oldTrackName!=trackName){  //Notify only once
+                console.log("Notify")
                 notifier.notify({
-                    title: track.album + ' by ' + track.album_artist,
-                    message: track.name
+                    title: trackName,
+                    subtitle: trackAlbum,
+                    icon: path.join(__dirname, 'spotify-logo.png'),
+                    message: trackAlbumArtist
                 });
-            });
+                oldTrackName = trackName
+            }
+            
+            isNotified = true
+            //console.log("State is: " + newState)
         }
-    }
+        else{
+            isNotified = false
+            //console.log("State is: " + newState)
+        }
+        getState(detectStateChange)
 }
 
 // TODO: Make sequential call instead of Async fn calls
