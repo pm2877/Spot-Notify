@@ -24,11 +24,25 @@ function getState(detectStateChange){        //takes a callback
 
 }
 
-function getTrackDetails(){
+function getTrackDetails(notify){
     spotify.getTrack(function(err, track){
         //TODO: check if track is not undefined, if yes then recall
         setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
     });
+    notify()
+}
+
+function notify(){
+    if(!isNotified || oldTrackName!=trackName){  //Notify only once
+                console.log("Notify")
+                notifier.notify({
+                    title: trackName,
+                    subtitle: trackAlbum,
+                    icon: path.join(__dirname, 'spotify-logo.png'),
+                    message: trackAlbumArtist
+                });
+                oldTrackName = trackName
+            } 
 }
 
 function setTrackDetails(album, album_artist, name, artwork){
@@ -40,24 +54,11 @@ function setTrackDetails(album, album_artist, name, artwork){
 
 function detectStateChange(newState){
         if(newState == 'playing'){
-            getTrackDetails()
-            if(!isNotified || oldTrackName!=trackName){  //Notify only once
-                console.log("Notify")
-                notifier.notify({
-                    title: trackName,
-                    subtitle: trackAlbum,
-                    icon: path.join(__dirname, 'spotify-logo.png'),
-                    message: trackAlbumArtist
-                });
-                oldTrackName = trackName
-            }
-            
+            getTrackDetails(notify)
             isNotified = true
-            //console.log("State is: " + newState)
         }
         else{
             isNotified = false
-            //console.log("State is: " + newState)
         }
         getState(detectStateChange)
 }
