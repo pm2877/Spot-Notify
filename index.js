@@ -7,7 +7,7 @@ var isNotified = false
 var trackAlbum, trackAlbumArtist, trackName, artworkUrl
 var oldTrackName=''
 
-//Use this later
+//TODO: Use this later to handle the situation when spotify is not running
 spotify.isRunning(function(err, isRunning){
     isSpotifyRunning=isRunning
 });
@@ -17,7 +17,6 @@ getState(detectStateChange) //pass a callback
 function getState(detectStateChange){        //takes a callback
 
     spotify.getState(function(err, state){  
-        //TODO: check if state is undefined, if yes, then recall
         currentState = state.state
         detectStateChange(currentState)     //detectStateChange is called here
     });
@@ -26,7 +25,6 @@ function getState(detectStateChange){        //takes a callback
 
 function getTrackDetails(notify){
     spotify.getTrack(function(err, track){
-        //TODO: check if track is not undefined, if yes then recall
         setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
     });
     notify()
