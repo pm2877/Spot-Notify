@@ -82,13 +82,20 @@ function notify(){
     if(!isNotified || oldTrackName!=trackName){  //Notify only once
         console.log("Notify")
         // cmd.run('terminal-notifier -title ' + trackName + ' -subtitle ' + trackAlbum + ' -message ' + trackAlbumArtist + ' -group "com.spotify.client" -activate "com.spotify.client"');
+        // console.log('terminal-notifier -title ' + trackName + ' -subtitle ' + trackAlbum + ' -message ' + trackAlbumArtist + ' -group "com.spotify.client" -activate "com.spotify.client"')
         notifier.notify({
             title: trackName,
             subtitle: trackAlbum,
             contentImage: path.join(__dirname, 'spotify-logo.png'),
             icon: path.join(__dirname, 'play-music-icon.png'),
             message: trackAlbumArtist,
-            group: 'com.spotify.client'
+            group: 'com.spotify.client',
+            wait: true,
+            actions: 'Skip'
+        });
+        notifier.on('click', function (notifierObject, options) {
+            cmd.run('open -a Spotify')            // will work on only Mac OS
+            // console.log('open -a Spotify')
         });
         oldTrackName = trackName
     } 
