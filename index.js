@@ -10,6 +10,7 @@ var oldTrackName=''
 /*TODO:
 1. Fix bug that is causing no notification being displayed for the first time when song is played where spotify is started after it was quit while a track was playing
 
+2. destroy notifactions.
 
 */
 
@@ -82,7 +83,8 @@ function notify(){
         notifier.notify({
             title: trackName,
             subtitle: trackAlbum,
-            icon: path.join(__dirname, 'spotify-logo.png'),
+            contentImage: path.join(__dirname, 'spotify-logo.png'),
+            icon: path.join(__dirname, 'play-music-icon.png'),
             message: trackAlbumArtist
         });
         oldTrackName = trackName
