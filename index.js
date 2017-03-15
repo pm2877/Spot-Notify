@@ -90,11 +90,16 @@ function notify(){
             icon: path.join(__dirname, 'play-music-icon.png'),
             message: trackAlbumArtist,
             group: 'com.spotify.client',
-            wait: true,
             actions: 'Skip'
         });
+
+        // not working
+        notifier.on('Skip', function (notifierObject, options) {
+            console.log('open -a Spotify')
+        });
+
         notifier.on('click', function (notifierObject, options) {
-            cmd.run('open -a Spotify')            // will work on only Mac OS
+            cmd.run('open -a Spotify')            // will work on only Mac OS and Linux
             // console.log('open -a Spotify')
         });
         oldTrackName = trackName
