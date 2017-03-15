@@ -11,14 +11,14 @@ var oldTrackName=''
 getRunningStatus(getState)
 
 function getRunningStatus(getState){
-    console.log("get")
+    //console.log("get")
     spotify.isRunning(function(err, isRunning){
         setRunningStatus(isRunning)
     }); 
 }
 
 function setRunningStatus(isRunning){
-    console.log("Set")
+    //console.log("Set")
     isSpotifyRunning = isRunning
     if(isSpotifyRunning){
         getState(detectStateChange) //pass a callback
@@ -29,16 +29,15 @@ function setRunningStatus(isRunning){
 }
 
 function getState(detectStateChange){        //takes a callback
-        spotify.getState(function(err, state){
-            if(state==null){
-                getRunningStatus(getState)
-            }
-            else{
-                currentState = state.state
-                detectStateChange(currentState)     //detectStateChange is called here
-            }
-            
-        });
+    spotify.getState(function(err, state){
+        if(state==null){
+            getRunningStatus(getState)
+        }
+        else{
+            currentState = state.state
+            detectStateChange(currentState)     //detectStateChange is called here
+        }     
+    });
 }
 
 function detectStateChange(newState){
@@ -49,12 +48,18 @@ function detectStateChange(newState){
     else{
         isNotified = false
     }
-    getState(detectStateChange)
+    getState(detectStateChange)             // This is the main recursive call
 }
 
 function getTrackDetails(notify){
     spotify.getTrack(function(err, track){
-        setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
+        if(track==null){
+            getState(detectStateChange)
+            return
+        }
+        else{
+            setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
+        }      
     });
     notify()
 }
