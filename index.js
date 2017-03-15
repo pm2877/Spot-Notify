@@ -11,27 +11,34 @@ var oldTrackName=''
 getRunningStatus(getState)
 
 function getRunningStatus(getState){
+    console.log("get")
     spotify.isRunning(function(err, isRunning){
         setRunningStatus(isRunning)
-    });
-    if(setRunningStatus){
-        getState(detectStateChange) //pass a callback
-    }
-    // else{
-    //     getRunningStatus(getState)
-    // }   
+    }); 
 }
 
 function setRunningStatus(isRunning){
+    console.log("Set")
     isSpotifyRunning = isRunning
-    return isSpotifyRunning
+    if(isSpotifyRunning){
+        getState(detectStateChange) //pass a callback
+    }
+    else{
+        getRunningStatus(getState)
+    } 
 }
 
 function getState(detectStateChange){        //takes a callback
-    spotify.getState(function(err, state){  
-        currentState = state.state
-        detectStateChange(currentState)     //detectStateChange is called here
-    });
+        spotify.getState(function(err, state){
+            if(state==null){
+                getRunningStatus(getState)
+            }
+            else{
+                currentState = state.state
+                detectStateChange(currentState)     //detectStateChange is called here
+            }
+            
+        });
 }
 
 function detectStateChange(newState){
