@@ -7,6 +7,12 @@ var isNotified = false
 var trackAlbum, trackAlbumArtist, trackName, artworkUrl
 var oldTrackName=''
 
+/*TODO:
+1. Fix bug that is causing no notification being displayed for the first time when song is played where spotify is started after it was quit while a track was playing
+
+
+*/
+
 
 getRunningStatus(getState)
 
@@ -30,7 +36,7 @@ function setRunningStatus(isRunning){
 
 function getState(detectStateChange){        //takes a callback
     spotify.getState(function(err, state){
-        if(state==null){
+        if(state==null || state == undefined){
             getRunningStatus(getState)
         }
         else{
@@ -53,9 +59,8 @@ function detectStateChange(newState){
 
 function getTrackDetails(notify){
     spotify.getTrack(function(err, track){
-        if(track==null){
+        if(track==null || track==undefined){
             getState(detectStateChange)
-            return
         }
         else{
             setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
