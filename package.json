@@ -21,6 +21,7 @@
   "author": "swankyCoder",
   "license": "MIT",
   "dependencies": {
+    "node-cmd": "^2.0.0",
     "node-notifier": "^5.0.2",
     "spotify-node-applescript": "^1.0.0"
   }
