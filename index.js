@@ -5,9 +5,8 @@ var spotify = require('spotify-node-applescript');
 var isSpotifyRunning
 var initialState
 var isNotified = false
-var trackAlbum, trackAlbumArtist, trackName, artworkUrl
+var trackAlbum, trackAlbumArtist, trackName, artworkUrl, trackPopularity
 var oldTrackName=''
-
 /*TODO:
 1. Fix bug that is causing no notification being displayed for the first time when song is played where spotify is started after it was quit while a track was playing
 
@@ -65,22 +64,25 @@ function getTrackDetails(notify){
             getState(detectStateChange)
         }
         else{
-            setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url)
+            //console.log(track.popularity)
+            setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url, track.popularity)
         }      
     });
     notify()
 }
 
-function setTrackDetails(album, album_artist, name, artwork){
+function setTrackDetails(album, album_artist, name, artwork, popularity){
+    //console.log(popularity)
     trackAlbum = album
     trackAlbumArtist = album_artist
     trackName = name
+    trackPopularity = popularity
     // artworkUrl = artwork
 }
 
 function notify(){
     if(!isNotified || oldTrackName!=trackName){  //Notify only once
-        console.log("Notify")
+        //console.log("Notify")
         // cmd.run('terminal-notifier -title ' + trackName + ' -subtitle ' + trackAlbum + ' -message ' + trackAlbumArtist + ' -group "com.spotify.client" -activate "com.spotify.client"');
         // console.log('terminal-notifier -title ' + trackName + ' -subtitle ' + trackAlbum + ' -message ' + trackAlbumArtist + ' -group "com.spotify.client" -activate "com.spotify.client"')
         notifier.notify({
@@ -88,13 +90,13 @@ function notify(){
             subtitle: trackAlbum,
             contentImage: path.join(__dirname, 'spotify-logo.png'),
             icon: path.join(__dirname, 'play-music-icon.png'),
-            message: trackAlbumArtist,
+            message: trackAlbumArtist + ' --- Popularity: ' + trackPopularity,
             group: 'com.spotify.client',
             actions: 'skip'
         }
-        ,function() {
-            console.log(arguments);
-        }
+        // ,function() {
+        //     console.log(arguments);
+        // }
         );
 
         // not working
