@@ -90,17 +90,23 @@ function notify(){
             icon: path.join(__dirname, 'play-music-icon.png'),
             message: trackAlbumArtist,
             group: 'com.spotify.client',
-            actions: 'Skip'
-        });
+            actions: 'skip'
+        }
+        ,function() {
+            console.log(arguments);
+        }
+        );
 
         // not working
-        notifier.on('Skip', function (notifierObject, options) {
-            console.log('open -a Spotify')
-        });
+
 
         notifier.on('click', function (notifierObject, options) {
-            cmd.run('open -a Spotify')            // will work on only Mac OS and Linux
-            // console.log('open -a Spotify')
+            if(arguments['2'].activationType=='contentsClicked'){
+                cmd.run('open -a Spotify')            // will work on only Mac OS and Linux
+            }
+            if(arguments['2'].activationValue=='skip'){
+                console.log('open -a Spotify')  //Skip to next song here
+            }
         });
         oldTrackName = trackName
     } 
