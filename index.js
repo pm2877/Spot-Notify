@@ -83,14 +83,17 @@ function setTrackDetails(album, album_artist, name, artwork, popularity){
 function notify(){
     if(!isNotified || oldTrackName!=trackName){  //Notify only once
         //console.log("Notify")
+
         // cmd.run('terminal-notifier -title ' + trackName + ' -subtitle ' + trackAlbum + ' -message ' + trackAlbumArtist + ' -group "com.spotify.client" -activate "com.spotify.client"');
         // console.log('terminal-notifier -title ' + trackName + ' -subtitle ' + trackAlbum + ' -message ' + trackAlbumArtist + ' -group "com.spotify.client" -activate "com.spotify.client"')
+
         notifier.notify({
             title: trackName,
             subtitle: trackAlbum,
             contentImage: path.join(__dirname, 'spotify-logo.png'),
             icon: path.join(__dirname, 'play-music-icon.png'),
             message: trackAlbumArtist + ' --- Popularity: ' + trackPopularity,
+            sender: 'com.spotify.client',
             group: 'com.spotify.client',
             actions: 'skip'
         }
