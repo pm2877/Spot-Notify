@@ -106,9 +106,9 @@ function notify(){
 
 
         notifier.on('click', function (notifierObject, options) {
-            if(arguments['2'].activationType=='contentsClicked'){
-                cmd.run('open -a Spotify')            // will work on only Mac OS and Linux
-            }
+            // if(arguments['2'].activationType=='contentsClicked'){
+            //     cmd.run('open -a Spotify')            // will work on only Mac OS and Linux
+            // }
             if(arguments['2'].activationValue=='skip'){
                 console.log('open -a Spotify')  //Skip to next song here
             }
