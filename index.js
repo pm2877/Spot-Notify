@@ -55,7 +55,7 @@ function detectStateChange(newState){
     else{
         isNotified = false
     }
-    getState(detectStateChange)             // This is the main recursive call
+    setTimeout.bind(null, getState(detectStateChange), 10)             // This is the main recursive call. setTimeour.bind() clears the call stack and minimizes memory use.
 }
 
 function getTrackDetails(notify){
