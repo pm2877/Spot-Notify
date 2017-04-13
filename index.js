@@ -1,7 +1,6 @@
 const notifier = require('node-notifier');
 const path = require('path');
-const cmd = require('node-cmd');
-var memwatch = require('memwatch-next');
+// const cmd = require('node-cmd');
 var spotify = require('spotify-node-applescript');
 var isSpotifyRunning
 var initialState
@@ -31,27 +30,25 @@ function getRunningStatus(){
     }); 
 }
 
-function getState(detectStateChange){        //takes a callback
+function getState(detectStateChange){        
     spotify.getState(function(err, state){
         if(state==null || state == undefined){
             eventEmitter.emit(false, getState);
         }
-        else{
-            // currentState = state.state
+        else if(state.state == 'playing'){
             eventEmitter.emit('state', state.state)
-        }     
+        }
+        else{
+            isNotified = false
+            eventEmitter.emit(true, detectStateChange);
+        } 
     });
 }
 
 function detectStateChange(newState){
-    if(newState == 'playing'){ 
-        getTrackDetails()
-        notify()
-        isNotified = true
-    }
-    else{
-        isNotified = false
-    }
+    getTrackDetails()
+    notify()
+    isNotified = true
     eventEmitter.emit(true, detectStateChange);  //calls getState
 }
 
@@ -61,7 +58,8 @@ function getTrackDetails(){
             eventEmitter.emit(false, detectStateChange);
         }
         else{
-            eventEmitter.emit('setTrack', track.album, track.album_artist, track.name, track.artwork_url, track.popularity)
+            eventEmitter.emit('setTrack', track.album, track.album_artist, 
+                track.name, track.artwork_url, track.popularity)
         }      
     });    
 }
@@ -88,7 +86,7 @@ function notify(){
             // icon: path.join(__dirname, 'spotify-logo.png'),
             contentImage: path.join(__dirname, 'spotify-logo.png'),
             icon: path.join(__dirname, 'play-music-icon.png'),
-            message: trackAlbumArtist + ' --- Popularity: ' + trackPopularity,
+            message: trackAlbumArtist + ' ~ Popularity: ' + trackPopularity,
             sender: 'com.spotify.client',
             group: 'com.spotify.client',
             actions: 'Skip'
