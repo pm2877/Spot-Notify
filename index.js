@@ -1,6 +1,5 @@
 const notifier = require('node-notifier');
 const path = require('path');
-const EventEmitter = require('events'); 
 const cmd = require('node-cmd');
 var memwatch = require('memwatch-next');
 var spotify = require('spotify-node-applescript');
@@ -9,72 +8,65 @@ var initialState
 var isNotified = false
 var trackAlbum, trackAlbumArtist, trackName, artworkUrl, trackPopularity
 var oldTrackName=''
+var events = require('events');
 
-/*TODO:
+var eventEmitter = new events.EventEmitter();
 
-*/
+eventEmitter.on(true, getState)
+eventEmitter.on(false, getRunningStatus)
+eventEmitter.on('state', detectStateChange)
+eventEmitter.on('setTrack', setTrackDetails)
 
-EventEmitter.defaultMaxListeners = 0
 getRunningStatus(getState)
 
-function getRunningStatus(getState){
+function getRunningStatus(){
     //console.log("get")
     spotify.isRunning(function(err, isRunning){
-        setRunningStatus(isRunning)
+        if(isRunning){
+            eventEmitter.emit(true, detectStateChange);
+        }
+        else{
+            eventEmitter.emit(false);
+        }
     }); 
-}
-
-function setRunningStatus(isRunning){
-    //console.log("Set")
-    isSpotifyRunning = isRunning
-    if(isSpotifyRunning){
-        getState(detectStateChange) //pass a callback
-    }
-    else{
-        setTimeout.bind(null, getRunningStatus(getState), 1000)
-    } 
 }
 
 function getState(detectStateChange){        //takes a callback
     spotify.getState(function(err, state){
         if(state==null || state == undefined){
-            setTimeout.bind(null, getRunningStatus(getState), 1000)
+            eventEmitter.emit(false, getState);
         }
         else{
-            currentState = state.state
-            detectStateChange(currentState)     //detectStateChange is called here
+            // currentState = state.state
+            eventEmitter.emit('state', state.state)
         }     
     });
 }
 
 function detectStateChange(newState){
-    if(newState == 'playing'){        //TODO: maybe can use a variable oldState and set it to false every time you notify? and check here if oldState != newState
-        getTrackDetails(notify)
+    if(newState == 'playing'){ 
+        getTrackDetails()
+        notify()
         isNotified = true
     }
     else{
         isNotified = false
     }
-    setTimeout.bind(null, getState(detectStateChange), 1000)             // This is the main recursive call. setTimeour.bind() clears the call stack and minimizes memory use.   
+    eventEmitter.emit(true, detectStateChange);  //calls getState
 }
 
-function getTrackDetails(notify){
+function getTrackDetails(){
     spotify.getTrack(function(err, track){
         if(track==null || track==undefined){ 
-            setTimeout.bind(null, getState(detectStateChange), 1000)
+            eventEmitter.emit(false, detectStateChange);
         }
         else{
-            //console.log(track.popularity)
-            setTrackDetails(track.album, track.album_artist, track.name, track.artwork_url, track.popularity)
-            
+            eventEmitter.emit('setTrack', track.album, track.album_artist, track.name, track.artwork_url, track.popularity)
         }      
-    });
-    notify()
-    
+    });    
 }
 
 function setTrackDetails(album, album_artist, name, artwork, popularity){
-    //console.log(popularity)
     trackAlbum = album
     trackAlbumArtist = album_artist
     trackName = name
@@ -82,9 +74,6 @@ function setTrackDetails(album, album_artist, name, artwork, popularity){
     // artworkUrl = artwork
 }
 
-memwatch.on('leak', function(info) {
- console.log(info)
-});
 
 function notify(){
     if((!isNotified || oldTrackName!=trackName)&&trackName!=undefined){  //Notify only once
@@ -110,8 +99,6 @@ function notify(){
         );
 
         // not working
-
-
         notifier.on('click', function (notifierObject, options) {
             // if(arguments['2'].activationType=='contentsClicked'){
             //     cmd.run('open -a Spotify')            // will work on only Mac OS and Linux
