@@ -4,7 +4,7 @@ Notifications and more for Spotify App on Mac OS.
 
 - This project provides a script that shows desktop notifications on _Mac OS_ that will contain name, artist, album, and other details of the song when the user starts playing or changes a song when using the Spotify Application.
 
-- The notifications also display a **Popularity Score** for the song that is currently being played, that indicates the popularity of the song on Spotify.
+- The notifications also display a **Popularity Score** for the song (on a scale of 100) that is currently being played, that indicates the popularity of the song on Spotify.
 
 - Users can select to Skip the song by clicking the Skip button in the notification.
 
