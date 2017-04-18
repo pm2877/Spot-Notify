@@ -2,7 +2,11 @@
 
 Notifications and more for Spotify App on Mac OS.
 
-- This project aims to provide the users with a script that shows desktop notifications on _Mac OS_ that will contain name, artist, album, and other details of the song when the user starts playing or changes a song when using the Spotify Application.
+- This project provides a script that shows desktop notifications on _Mac OS_ that will contain name, artist, album, and other details of the song when the user starts playing or changes a song when using the Spotify Application.
+
+- Users can select to Skip the song by clicking the Skip button in the notification.
+
+- Clicking on the notification opens the Spotify Application.
 
 - The project also aims to provide various shortcuts for Spotify to help users use various functionalities of the Spotify App without having to change their window while working. 
 
@@ -10,13 +14,14 @@ Notifications and more for Spotify App on Mac OS.
 -------------------
 
 #### Notification Example 1:
-<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 340px; height:60px;"/>
+<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 375px;"/>
 
 #### Notification Example 2: (On Hover)
-![Notification example 2](screenshots/on-hover.png)
+<img src="screenshots/on-hover.png" alt="Notification example 2" style="width: 375px;"/>
 
 #### Notification Example 3: (Notification Center)
-![Notification example 3](screenshots/notification-center.png)
+<img src="screenshots/notification-center.png" alt="Notification example 3" style="height: 600px;"/>
+
 
 ### Ongoing work: 
 	- Adding support for album artworks.
