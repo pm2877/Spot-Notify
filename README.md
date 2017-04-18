@@ -24,12 +24,22 @@ Notifications and more for Spotify App on Mac OS.
 
 	```cd path/to/the/repository```
 
-4. Run the script by typing the following in the terminal:
+4. Install dependencies using the following command:
 
-	```node Spot-Notify &```
+	```
+	cd Spot-Notify
+	npm install
+	cd ..
+	```
 
-5. The script will run in the background. When you play or change songs using Spotify, it will display notifications.
-6. To quit, kill the process.
+5. Run the script by typing the following in the terminal:
+
+	```
+	node Spot-Notify &
+	```
+
+6. The script will run in the background. When you play or change songs using Spotify, it will display notifications.
+7. To quit, kill the process.
 
 ### Screenshots:
 -------------------
