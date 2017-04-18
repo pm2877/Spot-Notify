@@ -13,13 +13,13 @@ Notifications and more for Spotify App on Mac OS.
 ### Screenshots:
 -------------------
 
-#### Notification Example 1:
-<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 275px;"/>
+- Notification Example 1:
+<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 375px;"/>
 
-#### Notification Example 2: (On Hover)
+- Notification Example 2: (On Hover)
 <img src="screenshots/on-hover.png" alt="Notification example 2" style="width: 375px;"/>
 
-#### Notification Example 3: (Notification Center)
+- Notification Example 3: (Notification Center)
 <img src="screenshots/notification-center.png" alt="Notification example 3" style="height: 600px;"/>
 
 
