@@ -10,6 +10,7 @@ var oldTrackName=''
 
 
 var eventEmitter = new events.EventEmitter();
+eventEmitter.setMaxListeners(0);
 
 eventEmitter.on(true, getState)
 eventEmitter.on(false, getRunningStatus)
