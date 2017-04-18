@@ -15,3 +15,6 @@ Ongoing work:
 	- Making installation simpler.
 	- Shortcuts for skip, forward, shuffle and repeat
 	- Add to Spotify Library option
+
+Possible Future Work:
+	- Convert the script to a Desktop App.
