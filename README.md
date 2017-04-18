@@ -55,6 +55,9 @@ Notifications and more for Spotify App on Mac OS.
 - Notification Example 3: (Notification Center)
 <img src="screenshots/notification-center.png" alt="Notification example 3" style="height: 600px;"/>
 
+- Notification Example 4: (Lock Screen)
+<img src="screenshots/lock-screen.png" alt="Notification example 4" style="height: 480px;"/>
+
 
 ### Ongoing work: 
 	- Adding support for album artworks.
