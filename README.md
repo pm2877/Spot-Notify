@@ -14,7 +14,7 @@ Notifications and more for Spotify App on Mac OS.
 -------------------
 
 #### Notification Example 1:
-<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 375px;"/>
+<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 275px;"/>
 
 #### Notification Example 2: (On Hover)
 <img src="screenshots/on-hover.png" alt="Notification example 2" style="width: 375px;"/>
