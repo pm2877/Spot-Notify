@@ -10,6 +10,21 @@ Notifications and more for Spotify App on Mac OS.
 
 - The project also aims to provide various shortcuts for Spotify to help users use various functionalities of the Spotify App without having to change their window while working. 
 
+
+### Requirements:
+- macOS: >= 10.8
+
+### Installation and Usage:
+1. Clone the repository (https://github.com/pm2877/Spot-Notify.git) or download the zip file and unzip the contents.
+2. Install Node if you don't already have it installed. The best way to do this is using homebrew:
+	`brew install node`
+3. Go to the directory where the directory Spot-Notify resides:
+    `cd path/to/the/repository`
+4. Run the script by typing the following in the terminal:
+    `node Spot-Notify &`
+5. The script will run in the background. When you play or change songs using Spotify, it will display notifications.
+6. To quit, kill the process.
+
 ### Screenshots:
 -------------------
 
@@ -32,9 +47,15 @@ Notifications and more for Spotify App on Mac OS.
 ### Possible Future Work:
 	- Convert the script to a Desktop App.
 
+
+### Dependencies:
+- [node-notifier](https://github.com/mikaelbr/node-notifier)
+- [spotify-node-applescript](https://github.com/andrehaveman/spotify-node-applescript)
+
+
 ### Licenses:
 
-- The code is licensed under the MIT license.
+- All code is licensed under the [MIT](License.md) license.
 
 - The image _play-music-icon.png_ is licensed to Spotify AB Inc.
 
