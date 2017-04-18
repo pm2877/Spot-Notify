@@ -1,4 +1,4 @@
-# Spot-Notify ![Spotify logo](img/spotify-logo.png)
+# Spot-Notify <img src="screenshots/spotify-logo.png" alt="Spotify logo" style="width: 25px; height:25px;"/>
 
 Notifications and more for Spotify App on Mac OS.
 
@@ -10,7 +10,7 @@ Notifications and more for Spotify App on Mac OS.
 -------------------
 
 #### Notification Example 1:
-![Notification example 1](screenshots/perfect-ed-sheeran.png)
+<img src="screenshots/perfect-ed-sheeran.png" alt="Notification example 1" style="width: 340px; height:60px;"/>
 
 #### Notification Example 2: (On Hover)
 ![Notification example 2](screenshots/on-hover.png)
