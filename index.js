@@ -17,45 +17,49 @@ eventEmitter.on(false, getRunningStatus)
 eventEmitter.on('state', detectStateChange)
 eventEmitter.on('setTrack', setTrackDetails)
 
-getRunningStatus(getState)
+getRunningStatus()
 
 function getRunningStatus(){
     spotify.isRunning(function(err, isRunning){
-        if(isRunning){
-            eventEmitter.emit(true, detectStateChange);
+        if(isRunning==true){
+            eventEmitter.emit(true);
         }
         else{
-            eventEmitter.emit(false);
+            setTimeout(function() {
+                eventEmitter.emit(false);
+            }, 5000);
         }
     }); 
 }
 
-function getState(detectStateChange){        
+function getState(){        
     spotify.getState(function(err, state){
         if(state==null || state == undefined){
-            eventEmitter.emit(false, getState);
+            eventEmitter.emit(false);
         }
         else if(state.state == 'playing'){
-            eventEmitter.emit('state', state.state)
+            eventEmitter.emit('state')
         }
         else{
             isNotified = false
-            eventEmitter.emit(true, detectStateChange);
+            setTimeout(function() {
+                eventEmitter.emit(true);
+            }, 500);
         } 
     });
 }
 
-function detectStateChange(newState){
+function detectStateChange(){
     getTrackDetails()
     notify()
     isNotified = true
-    eventEmitter.emit(true, detectStateChange);  // calls getState
+    eventEmitter.emit(true);  // calls getState
 }
 
 function getTrackDetails(){
     spotify.getTrack(function(err, track){
         if(track==null || track==undefined){ 
-            eventEmitter.emit(false, detectStateChange);
+            eventEmitter.emit(false);
         }
         else{
             eventEmitter.emit('setTrack', track.album, track.album_artist, 
