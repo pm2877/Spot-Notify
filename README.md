@@ -1,6 +1,6 @@
 # Spot-Notify <img src="screenshots/spotify-logo.png" alt="Spotify logo" style="width: 25px; height:25px;"/>
 
-Notifications and more for Spotify App on Mac OS.
+Notifications & more for Spotify App on Mac OS.
 
 - This project provides a script that shows desktop notifications on _Mac OS_ that will contain name, artist, album, and other details of the song when the user starts playing or changes a song when using the Spotify Application.
 
