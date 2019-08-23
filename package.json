@@ -21,6 +21,8 @@
   "author": "swankyCoder",
   "license": "MIT",
   "dependencies": {
+    "async-polling": "^0.2.1",
+    "eslint": "^6.2.1",
     "node-notifier": "^5.1.2",
     "spotify-node-applescript": "^1.0.0"
   }

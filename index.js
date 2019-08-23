@@ -1,86 +1,120 @@
-var events = require('events');
 const path = require('path');
 const notifier = require('node-notifier');
 var spotify = require('spotify-node-applescript');
-var isSpotifyRunning
-var initialState
+var AsyncPolling = require('async-polling');
 var isNotified = false
 var trackAlbum, trackAlbumArtist, trackName, artworkUrl, trackPopularity
 var oldTrackName=''
 
-
-var eventEmitter = new events.EventEmitter();
-eventEmitter.setMaxListeners(0);
-
-eventEmitter.on(true, getState)
-eventEmitter.on(false, getRunningStatus)
-eventEmitter.on('state', detectStateChange)
-eventEmitter.on('setTrack', setTrackDetails)
-
-getRunningStatus()
-
-function getRunningStatus(){
-    spotify.isRunning(function(err, isRunning){
-        if(isRunning==true){
-            eventEmitter.emit(true);
+var isRunningPoll  = AsyncPolling(function (end) {
+    spotify.isRunning(function(error, result){
+        if (error) {
+            // Notify the error:
+            console.log('Encountered an error while checking is Spotify is running')
+            end(error)
+            return;
         }
-        else{
-            setTimeout(function() {
-                eventEmitter.emit(false);
-            }, 5000);
-        }
+        
+        // Then send it to the listeners:
+        end(null, result);
     }); 
-}
+}, 3000);
+ 
+isRunningPoll.on('error', function (error) {
+    // The polling encountered an error, handle it here.
+    console.log('Encountered an error while polling to see if spotify is running: ', error)
+});
 
-function getState(){        
-    spotify.getState(function(err, state){
-        if(state==null || state == undefined){
-            eventEmitter.emit(false);
-        }
-        else if(state.state == 'playing'){
-            eventEmitter.emit('state')
-        }
-        else{
-            isNotified = false
-            setTimeout(function() {
-                eventEmitter.emit(true);
-            }, 500);
-        } 
-    });
-}
+isRunningPoll.on('result', function (isRunning) {
+    if (isRunning == true) {
+        console.log('Spotify is running')
+        isRunningPoll.stop()
+        getStatePoll.run()
+    } else {
+        console.log('Spotify is not running')
+    }
+});
+ 
+isRunningPoll.run(); // Starting point of the script.
 
-function detectStateChange(){
-    getTrackDetails()
-    notify()
+
+var getStatePoll  = AsyncPolling(function (end) {
+    spotify.getState(function(error, result){
+        if (error) {
+            console.log('Encountered an error while checking the current state')
+
+            this.stop()
+            isRunningPoll.run()
+            
+            end(error)
+            return;
+        }
+
+        // Then send it to the listeners:
+        end(null, result);
+    }); 
+}, 500);
+
+getStatePoll.on('error', function (error) {
+    // The polling encountered an error, handle it here.
+    getStatePoll.stop()
+    isRunningPoll.run()
+    console.log('Encountered an error while polling to get current state: ', error)
+});
+
+getStatePoll.on('result', function (result) {
+    if (result === null || result === undefined) {
+        getStatePoll.stop()
+        isRunningPoll.run()
+    }
+    else if (result.state === 'playing') {
+        console.log('Something is playing...')
+        detectStateChange()
+    }
+    else {
+        console.log('Not playing anything...')
+        isNotified = false
+    } 
+});
+ 
+
+async function detectStateChange() {
+    await getTrackDetails()
+    await notify()
     isNotified = true
-    eventEmitter.emit(true);  // calls getState
 }
 
 function getTrackDetails(){
-    spotify.getTrack(function(err, track){
-        if(track==null || track==undefined){ 
-            eventEmitter.emit(false);
+    spotify.getTrack(function (err, track) {
+        if (err) {
+            console.log('Encountered an error while getting track details')
+            return;
         }
-        else{
-            eventEmitter.emit('setTrack', track.album, track.album_artist, 
-                track.name, track.artwork_url, track.popularity)
+        if (track === null || track === undefined) { 
+            console.log('Cannot find the track. Is there something playing?')
+            getStatePoll.stop()
+            isRunningPoll.run()
+        }
+        else {
+            setTrackDetails(track)
         }      
     });    
 }
 
-function setTrackDetails(album, album_artist, name, artwork, popularity){
+function setTrackDetails({album, album_artist, name, artwork_url, popularity}) {
+    console.log('Setting track details...')
     trackAlbum = album
     trackAlbumArtist = album_artist
     trackName = name
     trackPopularity = popularity
-    // artworkUrl = artwork
+    // artworkUrl = artwork_url
 }
 
 
-function notify(){
-    if((!isNotified || oldTrackName!=trackName)&&trackName!=undefined){ 
+async function notify(){
+    if((!isNotified || oldTrackName !== trackName) && trackName !== undefined){ 
 
-        notifier.notify({
+        await notifier.notify({
             title: trackName,
             subtitle: trackAlbum,
             contentImage: path.join(__dirname, '/img/spotify-logo.png'),
