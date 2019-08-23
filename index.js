@@ -4,21 +4,38 @@ var spotify = require('spotify-node-applescript');
 var AsyncPolling = require('async-polling');
 var isNotified = false
 var trackAlbum, trackAlbumArtist, trackName, artworkUrl, trackPopularity
-var oldTrackName=''
+var oldTrackName = ''
 
-var isRunningPoll  = AsyncPolling(function (end) {
+const isRunningPoll = AsyncPolling(function (end) {
     spotify.isRunning(function(error, result){
         if (error) {
-            // Notify the error:
             console.log('Encountered an error while checking is Spotify is running')
+
             end(error)
             return;
         }
         
-        // Then send it to the listeners:
+        // Sending it to the listeners
         end(null, result);
     }); 
 }, 3000);
+
+const getStatePoll = AsyncPolling(function (end) {
+    spotify.getState(function(error, result){
+        if (error) {
+            console.log('Encountered an error while checking the current state')
+
+            this.stop()
+            isRunningPoll.run()
+            
+            end(error)
+            return;
+        }
+
+        // Sending it to the listeners
+        end(null, result);
+    }); 
+}, 500);
  
 isRunningPoll.on('error', function (error) {
     // The polling encountered an error, handle it here.
@@ -34,26 +51,6 @@ isRunningPoll.on('result', function (isRunning) {
         console.log('Spotify is not running')
     }
 });
- 
-isRunningPoll.run(); // Starting point of the script.
-
-
-var getStatePoll  = AsyncPolling(function (end) {
-    spotify.getState(function(error, result){
-        if (error) {
-            console.log('Encountered an error while checking the current state')
-
-            this.stop()
-            isRunningPoll.run()
-            
-            end(error)
-            return;
-        }
-
-        // Then send it to the listeners:
-        end(null, result);
-    }); 
-}, 500);
 
 getStatePoll.on('error', function (error) {
     // The polling encountered an error, handle it here.
@@ -77,15 +74,16 @@ getStatePoll.on('result', function (result) {
     } 
 });
  
+isRunningPoll.run(); // Starting point of the script.
 
-async function detectStateChange() {
+detectStateChange = async () => {
     await getTrackDetails()
     await notify()
     isNotified = true
 }
 
-function getTrackDetails(){
-    spotify.getTrack(function (err, track) {
+getTrackDetails = async () => {
+    await spotify.getTrack(function (err, track) {
         if (err) {
             console.log('Encountered an error while getting track details')
             return;
@@ -101,7 +99,7 @@ function getTrackDetails(){
     });    
 }
 
-function setTrackDetails({album, album_artist, name, artwork_url, popularity}) {
+setTrackDetails = ({album, album_artist, name, artwork_url, popularity}) => {
     console.log('Setting track details...')
     trackAlbum = album
     trackAlbumArtist = album_artist
@@ -110,8 +108,7 @@ function setTrackDetails({album, album_artist, name, artwork_url, popularity}) {
     // artworkUrl = artwork_url
 }
 
-
-async function notify(){
+notify = async () => {
     if((!isNotified || oldTrackName !== trackName) && trackName !== undefined){ 
 
         await notifier.notify({
@@ -132,3 +129,5 @@ async function notify(){
         oldTrackName = trackName
     } 
 }
+
+

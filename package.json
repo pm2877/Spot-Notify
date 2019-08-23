@@ -1,6 +1,6 @@
 {
   "name": "Spot-Notify",
-  "version": "1.0.0",
+  "version": "1.1",
   "description": "Display MacOSX notfications for spotify music",
   "main": "index.js",
   "scripts": {
