@@ -1,10 +1,9 @@
 const path = require('path');
 const notifier = require('node-notifier');
-var spotify = require('spotify-node-applescript');
+const spotify = require('spotify-node-applescript');
 var AsyncPolling = require('async-polling');
 var isNotified = false
-var trackAlbum, trackAlbumArtist, trackName, artworkUrl, trackPopularity
-var oldTrackName = ''
+var trackAlbum, trackAlbumArtist, trackName, artworkUrl, trackPopularity, oldTrackName
 
 const isRunningPoll = AsyncPolling(function (end) {
     spotify.isRunning(function(error, result){
@@ -60,7 +59,7 @@ getStatePoll.on('error', function (error) {
 });
 
 getStatePoll.on('result', function (result) {
-    if (result === null || result === undefined) {
+    if (!result) {
         getStatePoll.stop()
         isRunningPoll.run()
     }
@@ -88,7 +87,7 @@ getTrackDetails = async () => {
             console.log('Encountered an error while getting track details')
             return;
         }
-        if (track === null || track === undefined) { 
+        if (!track) { 
             console.log('Cannot find the track. Is there something playing?')
             getStatePoll.stop()
             isRunningPoll.run()
@@ -109,7 +108,7 @@ setTrackDetails = ({album, album_artist, name, artwork_url, popularity}) => {
 }
 
 notify = async () => {
-    if((!isNotified || oldTrackName !== trackName) && trackName !== undefined){ 
+    if(trackName && (!isNotified || oldTrackName !== trackName)){ 
 
         await notifier.notify({
             title: trackName,
@@ -120,11 +119,7 @@ notify = async () => {
             sender: 'com.spotify.client',
             group: 'com.spotify.client',
             actions: 'Skip'
-        }
-        // ,function() {
-        //     console.log(arguments);
-        // }
-        );
+        });
 
         oldTrackName = trackName
     } 
