@@ -1,7 +1,8 @@
-const stateInfo = require('./state_info');
+const StateInfo = require('./state_info');
 const spotify = require('spotify-node-applescript');
-
+ 
 let AsyncPolling = require('async-polling');
+let stateInfo = new StateInfo();
 
 const isRunningPoll = AsyncPolling(function (end) {
     spotify.isRunning(function(error, result){
@@ -48,8 +49,9 @@ getStatePoll.on('result', function (result) {
     }
     else {
         // console.debug('Not playing anything...')
-        isNotified = false
+        stateInfo.isNotified = false
     } 
 });
 
 exports.isRunningPoll = isRunningPoll;
+exports.getStatePoll = getStatePoll;
