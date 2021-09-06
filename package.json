@@ -23,7 +23,7 @@
   "dependencies": {
     "async-polling": "^0.2.1",
     "eslint": "^6.2.1",
-    "node-notifier": "^5.1.2",
+    "node-notifier": "^8.0.1",
     "spotify-node-applescript": "^1.0.0"
   }
 }
